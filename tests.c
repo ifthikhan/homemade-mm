@@ -2,10 +2,12 @@
  * Unit tests for the memory allocator.
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <stdbool.h>
 #include <string.h>
+
 #include "mm.h"
 
 static void test_mm_init() {
@@ -81,6 +83,15 @@ static void test_mm_max_heap() {
     assert(ptr == NULL && "No protection if size specified is gt max size");
 }
 
+static void test_mm_calloc() {
+
+    char *ptr = (char *)hmm_mm_calloc(10, sizeof(char));
+    int i;
+    for (i = 0; i < 10; i++) {
+        assert(*ptr == 0 && "The byte is not '0'");
+    }
+}
+
 int main() {
 
     test_mm_init();
@@ -93,6 +104,8 @@ int main() {
     test_mm_free_multi();
 
     test_mm_max_heap();
+
+    test_mm_calloc();
 
     return EXIT_SUCCESS;
 }

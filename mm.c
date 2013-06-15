@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <sys/mman.h>
+#include <string.h>
 
 #include "memlib.h"
 #include "mm.h"
@@ -137,6 +138,13 @@ void hmm_mm_free(void *bp) {
     PUT(HDRP(bp), PACK(size, 0));
     PUT(FTRP(bp), PACK(size, 0));
     coalesce(bp);
+}
+
+void * hmm_mm_calloc(size_t nitems, size_t size) {
+
+    size_t t = nitems * size;
+    void *ptr = hmm_mm_malloc(t);
+    return memset(ptr, 0, t);
 }
 
 /*
