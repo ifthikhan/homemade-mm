@@ -77,8 +77,8 @@ static void test_mm_free_multi() {
 static void test_mm_max_heap() {
 
     int max_size = 2097152;
-    max_size = 2000000;
     char *ptr = (char *)hmm_mm_malloc(max_size);
+    assert(ptr == NULL && "No protection if size specified is gt max size");
 }
 
 int main() {
