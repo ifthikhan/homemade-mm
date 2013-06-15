@@ -2,7 +2,8 @@
 int hmm_mm_init(void);
 void *hmm_mm_malloc(size_t size);
 void hmm_mm_free(void *bp);
-void * hmm_mm_calloc(size_t nitems, size_t size);
+void *hmm_mm_calloc(size_t nitems, size_t size);
+void *hmm_mm_realloc(void *ptr, size_t size);
 
 /* Unused. Just to keep us compatible with the 15-213 malloc driver */
 typedef struct {

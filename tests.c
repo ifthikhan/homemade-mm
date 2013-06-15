@@ -87,8 +87,24 @@ static void test_mm_calloc() {
 
     char *ptr = (char *)hmm_mm_calloc(10, sizeof(char));
     int i;
-    for (i = 0; i < 10; i++) {
+    for (i = 0; i < 10; i++, ptr++) {
         assert(*ptr == 0 && "The byte is not '0'");
+    }
+}
+
+static void test_mm_realloc() {
+
+    int n = sizeof(char) * 10;
+
+    char *ptr = hmm_mm_malloc(n);
+    memset(ptr, 15, n);
+
+    char *ptr2;
+    ptr2 = hmm_mm_realloc(ptr, n * 2);
+
+    int i;
+    for (i = 0; i < n; i++, ptr2++) {
+        assert(*ptr2 == 15 && "The byte set is not equal to 15");
     }
 }
 
@@ -106,6 +122,8 @@ int main() {
     test_mm_max_heap();
 
     test_mm_calloc();
+
+    test_mm_realloc();
 
     return EXIT_SUCCESS;
 }

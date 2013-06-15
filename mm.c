@@ -140,11 +140,18 @@ void hmm_mm_free(void *bp) {
     coalesce(bp);
 }
 
-void * hmm_mm_calloc(size_t nitems, size_t size) {
+void *hmm_mm_calloc(size_t nitems, size_t size) {
 
     size_t t = nitems * size;
     void *ptr = hmm_mm_malloc(t);
     return memset(ptr, 0, t);
+}
+
+void *hmm_mm_realloc(void *ptr, size_t size) {
+
+    void *ptr_new;
+    ptr_new = hmm_mm_malloc(size);
+    return memcpy(ptr_new, ptr, size);
 }
 
 /*
