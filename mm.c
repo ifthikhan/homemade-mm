@@ -84,7 +84,7 @@ int hmm_mm_init(void) {
  * Allocate a block in memory with atleast size bytes for the payload. If
  * sufficient space is not found the function will return NULL
  */
-void *hm_mm_malloc(size_t size) {
+void *hmm_mm_malloc(size_t size) {
 
     if (heap_listp == 0)
         hmm_mm_init();

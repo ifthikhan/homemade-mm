@@ -29,7 +29,7 @@ extern char* strerror(int);
  */
 void hmm_mem_init(void) {
 
-    mem_heap = mmap(0, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS,
+    mem_heap = mmap(0, MAX_HEAP, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS,
                     -1, 0);
     if (mem_heap == (void *)-1)
         fprintf(stderr, "%s: %s", "mmap failed", strerror(errno));
