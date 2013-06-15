@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <errorno.h>
+#include <errno.h>
 #include <sys/mman.h>
 
 #include "memlib.h"
@@ -22,8 +22,8 @@
 #define PACK(size, alloc) ((size) | (alloc))
 
 //Read and write a word at address p
-#define GET(p)          (*(unsigned int *)p)
-#define PUT(p, val)     (*(unsigned int *)p = (val))
+#define GET(p)          (*(unsigned int *)(p))
+#define PUT(p, val)     (*(unsigned int *)(p) = (val))
 
 #define GET_SIZE(p)     (GET(p) & ~0x7)
 #define GET_ALLOC(p)    (GET(p) & 0x1)
@@ -47,6 +47,9 @@ static void *coalesce(void *bp);
 
 
 int hmm_mm_init(void) {
+
+    // Initialize the memory library.
+    hmm_mem_init();
 
     /*
      * Allocate a 16 bytes in the heap.
@@ -128,7 +131,7 @@ void hmm_mm_free(void *bp) {
     size_t size = GET_SIZE(HDRP(bp));
 
     if (heap_listp == 0){
-        mm_init();
+        hmm_mm_init();
     }
 
     PUT(HDRP(bp), PACK(size, 0));
@@ -179,7 +182,7 @@ static void *extend_heap(size_t words) {
 
     char *bp;
     bp = hmm_mem_sbrk(size);
-    if (*bp == (void *)-1)
+    if (bp == (void *)-1)
         return NULL;
 
     // The new block header and footer
@@ -207,7 +210,7 @@ static void *find_fit(size_t asize) {
 
     for(bp = heap_listp; GET_SIZE(HDRP(bp)) > 0; bp = NEXT_BLKP(bp))
         if (!GET_ALLOC(HDRP(bp)) && GET_SIZE(HDRP(bp)) >= asize)
-            return bp
+            return bp;
 
     return NULL;
 }
