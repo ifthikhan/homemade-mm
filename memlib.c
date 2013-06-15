@@ -22,14 +22,18 @@ static char *mem_brk;
 //Points to max heap legal address plus 1
 static char *mem_max_address;
 
+extern char* strerror(int);
 
 /**
  * Initialize the memory system
  */
 void hmm_mem_init(void) {
 
-    mem_heap = (char *) mmap(NULL, MAX_HEAP, PROT_READ|PROT_WRITE, MAP_ANON,
-                             NULL, 0);
+    mem_heap = mmap(0, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS,
+                    -1, 0);
+    if (mem_heap == (void *)-1)
+        fprintf(stderr, "%s: %s", "mmap failed", strerror(errno));
+
     mem_brk = mem_heap;
     mem_max_address = (char *)(mem_heap + MAX_HEAP);
 }
