@@ -21,6 +21,7 @@ static void test_mm_malloc_size_zero() {
     hmm_mm_init();
     char *ptr = (char *)hmm_mm_malloc(0);
     assert(ptr == NULL && "OMG!!!");
+    assert(errno == EINVAL && "errno should be set to EINVAL");
 }
 
 static void test_mm_malloc() {

@@ -90,8 +90,10 @@ void *hmm_mm_malloc(size_t size) {
     if (heap_listp == 0)
         hmm_mm_init();
 
-    if (size == 0)
+    if (size == 0) {
+        errno = EINVAL;
         return NULL;
+    }
 
     size_t asize;      /* Adjusted block size */
     size_t extendsize; /* Amount to extend heap if no fit */
@@ -114,7 +116,6 @@ void *hmm_mm_malloc(size_t size) {
 
     extendsize = MAX(asize, CHUNKSIZE);
     bp = extend_heap(extendsize/WSIZE);
-    errno = 0;
     if (bp  == NULL) {
         errno = ENOMEM;
         return NULL;
