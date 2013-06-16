@@ -150,8 +150,21 @@ void *hmm_mm_calloc(size_t nitems, size_t size) {
 void *hmm_mm_realloc(void *ptr, size_t size) {
 
     void *ptr_new;
-    ptr_new = hmm_mm_malloc(size);
-    return memcpy(ptr_new, ptr, size);
+
+    if (ptr == NULL && size > 0) {
+        ptr_new = hmm_mm_malloc(size);
+        return ptr_new;
+    }
+    else if(ptr != NULL && size == 0) {
+        hmm_mm_free(ptr);
+        return NULL;
+    }
+    else {
+        ptr_new = hmm_mm_malloc(size);
+        memcpy(ptr_new, ptr, size);
+        hmm_mm_free(ptr);
+        return ptr_new;
+    }
 }
 
 /*
