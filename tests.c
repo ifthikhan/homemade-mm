@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <stdbool.h>
 #include <string.h>
+#include <errno.h>
 
 #include "mm.h"
 
@@ -81,6 +82,7 @@ static void test_mm_max_heap() {
     int max_size = 2097152;
     char *ptr = (char *)hmm_mm_malloc(max_size);
     assert(ptr == NULL && "No protection if size specified is gt max size");
+    assert(errno == ENOMEM && "When malloc fails ENOMEM should be set");
 }
 
 static void test_mm_calloc() {
@@ -108,6 +110,31 @@ static void test_mm_realloc() {
     }
 }
 
+static void test_mm_realloc_ptr_null() {
+
+    int n = sizeof(char) * 10;
+    char *ptr;
+    ptr = (char *)hmm_mm_realloc(NULL, n);
+    char *str = "Hello bro!";
+
+    strcpy(ptr, str);
+    assert(strcmp(ptr, str) == 0 && "When null ptr is given does not act as malloc");
+}
+
+static void test_mm_realloc_size_zero() {
+
+    char *ptr;
+    ptr = hmm_mm_malloc(10);
+    ptr = hmm_mm_realloc(ptr, 0);
+    assert(ptr == NULL && "If size is zero NULL should be returned");
+}
+
+static void test_mm_realloc_ptr_null_size_zero() {
+
+    char *ptr = hmm_mm_realloc(NULL, 0);
+    assert(ptr == NULL && "if ptr is null and size is zero null is returned");
+}
+
 int main() {
 
     test_mm_init();
@@ -124,6 +151,9 @@ int main() {
     test_mm_calloc();
 
     test_mm_realloc();
+    test_mm_realloc_ptr_null();
+    test_mm_realloc_size_zero();
+    test_mm_realloc_ptr_null_size_zero();
 
     return EXIT_SUCCESS;
 }

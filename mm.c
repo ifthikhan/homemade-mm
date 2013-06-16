@@ -114,8 +114,11 @@ void *hmm_mm_malloc(size_t size) {
 
     extendsize = MAX(asize, CHUNKSIZE);
     bp = extend_heap(extendsize/WSIZE);
-    if (bp  == NULL)
+    errno = 0;
+    if (bp  == NULL) {
+        errno = ENOMEM;
         return NULL;
+    }
 
     place(bp, asize);
     return bp;
@@ -151,7 +154,10 @@ void *hmm_mm_realloc(void *ptr, size_t size) {
 
     void *ptr_new;
 
-    if (ptr == NULL && size > 0) {
+    if (ptr == NULL && size <= 0) {
+        return NULL;
+    }
+    else if (ptr == NULL && size > 0) {
         ptr_new = hmm_mm_malloc(size);
         return ptr_new;
     }
