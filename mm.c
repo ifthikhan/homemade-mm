@@ -145,6 +145,11 @@ void hmm_mm_free(void *bp) {
 
 void *hmm_mm_calloc(size_t nitems, size_t size) {
 
+    if (nitems == 0 || size == 0) {
+        errno = EINVAL;
+        return NULL;
+    }
+
     size_t t = nitems * size;
     void *ptr = hmm_mm_malloc(t);
     return memset(ptr, 0, t);

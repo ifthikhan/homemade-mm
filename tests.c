@@ -94,6 +94,24 @@ static void test_mm_calloc() {
     }
 }
 
+static void test_mm_calloc_nitems_zero() {
+
+    char *ptr = (char *)hmm_mm_calloc(0, sizeof(char));
+    assert(ptr == NULL && "if nitems is zero null should be returned");
+}
+
+static void test_mm_calloc_size_zero() {
+
+    char *ptr = (char *)hmm_mm_calloc(10, 0);
+    assert(ptr == NULL && "if size is zero null should be returned");
+}
+
+static void test_mm_calloc_nitems_zero_size_zero() {
+
+    char *ptr = (char *)hmm_mm_calloc(0, 0);
+    assert(ptr == NULL && "if nitems and size is zero null should be returned");
+}
+
 static void test_mm_realloc() {
 
     int n = sizeof(char) * 10;
@@ -149,6 +167,9 @@ int main() {
     test_mm_max_heap();
 
     test_mm_calloc();
+    test_mm_calloc_nitems_zero();
+    test_mm_calloc_size_zero();
+    test_mm_calloc_nitems_zero_size_zero();
 
     test_mm_realloc();
     test_mm_realloc_ptr_null();
